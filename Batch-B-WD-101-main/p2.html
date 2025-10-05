@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Saym — Portfolio</title>
+
+<!-- FAVICON: small inline SVG -->
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="%231b1b1b"/><text x="50" y="58" font-size="48" font-family="Poppins,Arial" fill="%23f0c96b" text-anchor="middle">S</text></svg>'>
+
+<!-- Google Fonts (two fonts) -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ================= GLOBAL ================= */
+  :root{
+    --bg:#0e0e10;
+    --panel:#151517;
+    --muted:#bfc2c6;
+    --accent:#f0c96b; /* beige/gold accent */
+    --accent-dark:#a8844a;
+    --glass: rgba(255,255,255,0.03);
+    --card: #121214;
+    --maxwidth:1200px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:"Poppins", "Outfit", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(240,201,107,0.06), transparent 8%),
+                linear-gradient(180deg,#0c0c0d 0%, #111 100%);
+    color:#e8e8e8;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+
+  /* cursor glow */
+  .cursor-glow{
+    position:fixed;
+    left:0; top:0;
+    pointer-events:none;
+    width:260px; height:260px;
+    border-radius:50%;
+    mix-blend-mode:screen;
+    background: radial-gradient(circle, rgba(240,201,107,0.22) 0%, rgba(240,201,107,0.10) 25%, transparent 55%);
+    transform: translate(-50%,-50%);
+    transition: width .25s ease, height .25s ease;
+    z-index:0;
+  }
+
+  /* =============== HEADER / NAV =============== */
+  header{
+    position:sticky; top:0;
+    width:100%;
+    z-index:40;
+    backdrop-filter: blur(6px);
+    background: linear-gradient(180deg, rgba(20,20,20,0.6), rgba(20,20,20,0.35));
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .container{
+    max-width:var(--maxwidth);
+    margin:0 auto;
+    padding:14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+
+  /* left: logo / name */
+  .brand{
+    display:flex; align-items:center; gap:12px;
+  }
+  .logo{
+    width:44px; height:44px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--panel); border-radius:10px;
+    border:1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    font-weight:700; color:var(--accent);
+    font-family:Poppins, sans-serif;
+  }
+  .name{
+    font-size:1.05rem; font-weight:700; color:#fff;
+  }
+
+  /* right: nav links */
+  nav.primary{
+    display:flex; align-items:center; gap:20px;
+  }
+  nav.primary a{
+    color:var(--muted); text-decoration:none; font-weight:600; font-size:0.95rem;
+    padding:8px 12px; border-radius:8px; transition: all .18s ease;
+  }
+  nav.primary a:hover{ color:#fff; background: rgba(255,255,255,0.03)}
+
+  /* CTA button in header */
+  .btn-resume{
+    display:inline-block;
+    padding:8px 14px;
+    background: linear-gradient(180deg,var(--accent),var(--accent-dark));
+    color:#111; font-weight:700; border-radius:10px; text-decoration:none;
+    box-shadow:0 6px 20px rgba(160,110,30,0.12);
+  }
+
+  /* hamburger - only on mobile */
+  .hamburger{
+    display:none;
+    width:44px; height:44px; border-radius:8px;
+    background:var(--panel); align-items:center; justify-content:center; cursor:pointer;
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  .hamburger div{width:20px;height:2px;background:var(--muted); margin:3px 0; transition:all .2s}
+
+  /* ================= MAIN / SECTIONS ================= */
+  main{position:relative; z-index:5}
+  section{
+    padding:60px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+  }
+  .section-inner{
+    max-width:var(--maxwidth);
+    width:100%;
+    margin:0 auto;
+  }
+
+  h1,h2,h3{margin:0 0 12px 0; font-weight:700}
+  p{margin:0 0 14px 0; color:var(--muted); font-size:1rem}
+
+  /* ----- HERO ----- */
+  .hero{
+    gap:28px;
+    align-items:center;
+  }
+  .hero-left{
+    flex:1 1 520px;
+    padding:18px;
+  }
+  .hero-right{
+    flex:0 0 360px;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  .hero-left .role{
+    display:inline-block;
+    font-size:1.05rem; color:var(--accent);
+    background: linear-gradient(90deg, rgba(240,201,107,0.08), transparent);
+    padding:6px 10px; border-radius:8px; margin-bottom:18px;
+  }
+
+  .hero-left h1{
+    font-size:3.1rem; line-height:1.02; color:#fff;
+  }
+  .hero-left p{font-size:1.05rem; max-width:70ch; color:var(--muted)}
+
+  .hero-ctas{
+    margin-top:22px; display:flex; gap:12px; align-items:center;
+  }
+  .btn{
+    padding:12px 18px; border-radius:12px; font-weight:700; text-decoration:none;
+    display:inline-block; cursor:pointer;
+  }
+  .btn-primary{
+    background: linear-gradient(180deg,var(--accent),var(--accent-dark));
+    color:#111; box-shadow:0 8px 18px rgba(168,132,74,0.12);
+  }
+  .btn-ghost{
+    border:1px solid rgba(255,255,255,0.06); color:var(--muted); background:transparent;
+  }
+
+  /* hero profile square */
+  .profile-card{
+    width:320px; height:320px; border-radius:14px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03);
+    display:flex; align-items:center; justify-content:center; overflow:hidden;
+    box-shadow:0 16px 40px rgba(0,0,0,0.6);
+    transition:transform .35s ease, box-shadow .35s ease;
+  }
+  .profile-card img{ width:100%; height:100%; object-fit:cover; }
+
+  .profile-card:hover{ transform:translateY(-6px); box-shadow:0 26px 60px rgba(0,0,0,0.65) }
+
+  /* ----- ABOUT ----- */
+  .about-grid{ display:grid; grid-template-columns: 1fr 420px; gap:28px; align-items:start }
+  .about-bio{ padding:6px 0 }
+  .about-photo{
+    background:var(--card); padding:10px; border-radius:12px; border:1px solid rgba(255,255,255,0.03);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .about-photo img{ width:100%; height:100%; max-width:380px; border-radius:10px; object-fit:cover }
+
+  /* skills visual */
+  .skills-list{ display:flex; flex-wrap:wrap; gap:12px; margin-top:18px }
+  .skill-pill{ background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+               padding:10px 12px; border-radius:10px; display:flex; gap:10px; align-items:center;
+               border:1px solid rgba(255,255,255,0.03); min-width:140px }
+  .skill-pill img{ width:28px; height:28px; object-fit:contain; }
+
+  /* progress bars */
+  .progress{
+    width:100%; background:rgba(255,255,255,0.03); height:10px; border-radius:8px; overflow:hidden;
+    margin-top:8px;
+  }
+  .progress > i{ display:block; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-dark)); width:0%; transition:width .9s cubic-bezier(.2,.9,.3,1) }
+
+  /* ----- PROJECTS ----- */
+  .projects-grid{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+    gap:20px;
+  }
+  .project{
+    background:var(--card); border-radius:12px; padding:14px; border:1px solid rgba(255,255,255,0.03);
+    transition:transform .28s ease, box-shadow .28s ease;
+  }
+  .project:hover{ transform:translateY(-8px); box-shadow:0 22px 60px rgba(0,0,0,0.6) }
+  .project img{ width:100%; height:160px; object-fit:cover; border-radius:8px; display:block }
+  .tech-list{ margin-top:10px; display:flex; flex-wrap:wrap; gap:8px }
+  .tech{ padding:6px 10px; background: rgba(255,255,255,0.02); border-radius:8px; font-size:0.9rem; color:var(--muted) }
+
+  .project-links{ margin-top:12px; display:flex; gap:10px }
+
+  /* ----- ACHIEVEMENTS / GALLERY ----- */
+  .grid-gallery{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px }
+  .grid-gallery img{ width:100%; height:160px; object-fit:cover; border-radius:10px; border:1px solid rgba(255,255,255,0.03) }
+
+  /* ----- CONTACT ----- */
+  .contact-grid{ display:grid; grid-template-columns: 1fr 420px; gap:30px; align-items:start }
+  .socials{ display:flex; gap:14px; flex-wrap:wrap }
+  .socials a{ color:var(--muted); text-decoration:none; border-radius:8px; padding:8px 12px; background:rgba(255,255,255,0.02) }
+
+  /* form styling (HTML-only form layout) */
+  form.contact-form{ display:flex; flex-direction:column; gap:12px; }
+  .field{ display:flex; flex-direction:column; gap:6px }
+  input[type="text"], input[type="email"], textarea{
+    background:transparent; border:1px solid rgba(255,255,255,0.06); padding:10px 12px; color:#fff; border-radius:8px;
+  }
+  textarea{ min-height:120px; resize:vertical }
+
+  /* ----- FOOTER ----- */
+  footer{ padding:26px 24px; text-align:center; color:var(--muted); background: linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.06)); }
+
+  /* utility */
+  .small{ font-size:.95rem; color:var(--muted) }
+  .muted{ color:var(--muted) }
+
+  /* ====== RESPONSIVE ====== */
+  @media (max-width:1100px){
+    .about-grid, .contact-grid{ grid-template-columns: 1fr }
+    .hero-right{ flex:0 0 300px }
+    section{ padding:48px 20px }
+  }
+  @media (max-width:760px){
+    .container{ padding:10px 16px }
+    nav.primary{ display:none }
+    .hamburger{ display:flex }
+    .hero{ flex-direction:column; gap:18px }
+    .hero-left h1{ font-size:2.2rem }
+    .hero-left p{ font-size:1rem }
+    .profile-card{ width:260px; height:260px }
+    .hero-right{ order: -1 }
+  }
+
+  /* small animation hint for links */
+  a.underline{position:relative}
+  a.underline:after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--accent);transition:width .25s}
+  a.underline:hover:after{width:100%}
+
+</style>
+</head>
+<body>
+
+  <!-- glow circle -->
+  <div class="cursor-glow" id="glow"></div>
+
+  <!-- header/nav -->
+  <header>
+    <div class="container">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">S</div>
+        <div>
+          <div class="name">Saym</div>
+          <div class="small muted">Frontend · Creator</div>
+        </div>
+      </div>
+
+      <!-- primary nav -->
+      <nav class="primary" aria-label="Primary navigation">
+        <a href="#home" class="underline">Home</a>
+        <a href="#about" class="underline">About</a>
+        <a href="#projects" class="underline">Projects</a>
+        <a href="#gallery" class="underline">Gallery</a>
+        <a href="#contact" class="underline">Contact</a>
+        <a href="resume.pdf" class="btn-resume" download>Download CV</a>
+      </nav>
+
+      <!-- mobile hamburger -->
+      <div class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" role="button" tabindex="0">
+        <div></div><div></div><div></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MOBILE MENU (hidden by default) -->
+  <nav id="mobileMenu" style="display:none; position:fixed; right:18px; top:70px; z-index:60; background:var(--panel); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.03)">
+    <a href="#home" style="display:block;padding:8px 12px;color:var(--muted);text-decoration:none">Home</a>
+    <a href="#about" style="display:block;padding:8px 12px;color:var(--muted);text-decoration:none">About</a>
+    <a href="#projects" style="display:block;padding:8px 12px;color:var(--muted);text-decoration:none">Projects</a>
+    <a href="#gallery" style="display:block;padding:8px 12px;color:var(--muted);text-decoration:none">Gallery</a>
+    <a href="#contact" style="display:block;padding:8px 12px;color:var(--muted);text-decoration:none">Contact</a>
+  </nav>
+
+  <!-- MAIN -->
+  <main>
+    <!-- HERO -->
+    <section id="home" aria-labelledby="homeLabel">
+      <div class="section-inner hero">
+        <div class="hero-left">
+          <div class="role">Frontend Developer • Student</div>
+          <h1>Hi — I'm <span style="color:var(--accent)">Saym</span></h1>
+          <p>Building clean experiences, designing small tools, and learning fast. I enjoy front-end development, photography, and making projects that make learning easier.</p>
+
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="resume.pdf" download>Download Resume</a>
+            <a class="btn btn-ghost" href="#projects">View My Work</a>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <figure class="profile-card" aria-hidden="false">
+            <!-- replace profile.jpg with your own image file -->
+            <img src="profile.jpg" alt="Saym — profile photo (square)" />
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" aria-labelledby="aboutLabel">
+      <div class="section-inner about-grid">
+        <div>
+          <h2>About Me</h2>
+          <p class="about-bio">I’m a passionate learner and front-end developer who loves building small real-world apps and neat user interfaces. I focus on HTML, CSS, and JavaScript and enjoy exploring design systems, photography, and digital marketing.</p>
+
+          <h3 style="margin-top:18px">Skills & Tools</h3>
+          <div class="skills-list" aria-hidden="false">
+            <!-- each .skill-pill can include icon + label -->
+            <div class="skill-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5 logo"><div><strong>HTML</strong><div class="progress"><i style="width:92%"></i></div></div></div>
+
+            <div class="skill-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3 logo"><div><strong>CSS</strong><div class="progress"><i style="width:88%"></i></div></div></div>
+
+            <div class="skill-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript logo"><div><strong>JavaScript</strong><div class="progress"><i style="width:78%"></i></div></div></div>
+
+            <div class="skill-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python logo"><div><strong>Python</strong><div class="progress"><i style="width:70%"></i></div></div></div>
+
+            <div class="skill-pill"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git logo"><div><strong>Git</strong><div class="progress"><i style="width:80%"></i></div></div></div>
+
+          </div>
+        </div>
+
+        <aside class="about-photo" aria-hidden="false">
+          <!-- optional larger photo or certificate -->
+          <img src="about-photo.jpg" alt="Saym working on a laptop / project photo" />
+        </aside>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" aria-labelledby="projectsLabel">
+      <div class="section-inner">
+        <h2>Projects / Work Showcase</h2>
+        <p class="small muted">Upload clear screenshots or short GIFs showing UI + provide a GitHub link or live demo URL for each project.</p>
+
+        <div class="projects-grid" style="margin-top:18px">
+          <!-- Project card: replace images and links -->
+          <article class="project" aria-labelledby="proj1">
+            <img src="project1.jpg" alt="Screenshot of Project 1">
+            <h3 id="proj1">Portfolio Website</h3>
+            <p>A clean single-file portfolio demonstrating responsive design, animations and accessibility.</p>
+            <div class="tech-list">
+              <span class="tech">HTML</span><span class="tech">CSS</span><span class="tech">JS</span>
+            </div>
+            <div class="project-links">
+              <a class="btn-ghost" href="https://github.com/yourusername/portfolio" target="_blank" rel="noopener">GitHub</a>
+              <a class="btn-ghost" href="#" target="_blank" rel="noopener">Live Demo</a>
+            </div>
+          </article>
+
+          <article class="project" aria-labelledby="proj2">
+            <img src="project2.jpg" alt="Screenshot of Project 2">
+            <h3 id="proj2">Mini Game (JS)</h3>
+            <p>A browser-based mini game built with vanilla JavaScript demonstrating DOM manipulation and game loop logic.</p>
+            <div class="tech-list"><span class="tech">JavaScript</span><span class="tech">HTML</span></div>
+            <div class="project-links">
+              <a class="btn-ghost" href="#" target="_blank" rel="noopener">GitHub</a>
+              <a class="btn-ghost" href="#" target="_blank" rel="noopener">Play</a>
+            </div>
+          </article>
+
+          <!-- Add more project <article> blocks as needed -->
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY / ACHIEVEMENTS -->
+    <section id="gallery" aria-labelledby="galleryLabel">
+      <div class="section-inner">
+        <h2>Achievements & Gallery</h2>
+        <p class="small muted">Photos of awards, certificates, and photography samples.</p>
+
+        <div class="grid-gallery" style="margin-top:18px">
+          <img src="achievement1.jpg" alt="Certificate or award 1">
+          <img src="achievement2.jpg" alt="Certificate or award 2">
+          <img src="photo1.jpg" alt="Photography sample 1">
+          <img src="photo2.jpg" alt="Photography sample 2">
+        </div>
+      </div>
+    </section>
+
+    <!-- MY STORY -->
+    <section id="story" aria-labelledby="storyLabel">
+      <div class="section-inner">
+        <h2>My Story</h2>
+        <p>I grew curious about technology from a young age. Over the years I taught myself HTML and CSS, built small tools, and used every project as a lesson. I aim to create things that help people learn or express themselves — and I’m excited to keep growing.</p>
+        <p class="small muted">(Short & honest stories are more relatable — keep this personal and update often.)</p>
+      </div>
+    </section>
+
+    <!-- MY ADVICE -->
+    <section id="advice" aria-labelledby="adviceLabel">
+      <div class="section-inner">
+        <h2>My Advice</h2>
+        <p><strong>Learn by building:</strong> pick tiny projects and finish them. <strong>Share progress:</strong> write short updates; feedback accelerates growth. <strong>Focus on fundamentals:</strong> HTML & CSS are forever — master them first.</p>
+      </div>
+    </section>
+
+    <!-- CONCLUSION & CONTACT -->
+    <section id="contact" aria-labelledby="contactLabel">
+      <div class="section-inner contact-grid">
+        <div>
+          <h2>Contact & Conclusion</h2>
+          <p>Thanks for visiting my portfolio. If you like what you see, let’s connect — I’m open to collaboration, internships, and learning opportunities.</p>
+
+          <div style="margin-top:18px">
+            <p class="small muted">Email</p>
+            <a class="underline" href="mailto:youremail@example.com">youremail@example.com</a>
+          </div>
+
+          <div style="margin-top:12px">
+            <p class="small muted">Social</p>
+            <div class="socials">
+              <a href="https://github.com/yourusername" target="_blank" rel="noopener">GitHub</a>
+              <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener">LinkedIn</a>
+              <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener">Instagram</a>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <h3 style="margin-bottom:12px">Send a Message</h3>
+          <!-- Plain HTML form (no backend) -->
+          <form class="contact-form" onsubmit="alert('This is a demo form — add backend or mailto to submit.'); return false;">
+            <div class="field">
+              <label class="small muted" for="name">Name</label>
+              <input id="name" type="text" placeholder="Your name" required>
+            </div>
+            <div class="field">
+              <label class="small muted" for="email">Email</label>
+              <input id="email" type="email" placeholder="you@example.com" required>
+            </div>
+            <div class="field">
+              <label class="small muted" for="message">Message</label>
+              <textarea id="message" placeholder="Write a short message..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- footer -->
+  <footer>
+    <div class="container" style="justify-content:center; gap:12px; flex-direction:column; align-items:center">
+      <div class="small muted">© 2025 Saym • Built with HTML, CSS & JS</div>
+      <div><a href="#home" class="underline">Back to top</a> • <a href="resume.pdf" download class="underline">Download Resume (PDF)</a></div>
+    </div>
+  </footer>
+
+<script>
+  // ========== Mobile menu toggle ==========
+  const hamb = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamb && hamb.addEventListener('click', () => {
+    const open = mobileMenu.style.display === 'block';
+    mobileMenu.style.display = open ? 'none' : 'block';
+    hamb.setAttribute('aria-expanded', String(!open));
+  });
+
+  // close mobile menu on link click
+  document.querySelectorAll('#mobileMenu a').forEach(a => a.addEventListener('click', () => mobileMenu.style.display='none'));
+
+  // ========= Cursor glow follow ===========
+  const glow = document.getElementById('glow');
+  document.addEventListener('mousemove', e => {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+
+  // ========= Animate progress bars when in view ==========
+  const progressElems = document.querySelectorAll('.progress > i');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const i = entry.target;
+        const width = i.style.width || '0%';
+        // width already set inline in HTML to desired %
+        i.style.width = i.getAttribute('style').replace('width:','') || width;
+      }
+    });
+  }, {threshold:0.35});
+  progressElems.forEach(pe => observer.observe(pe));
+</script>
+
+</body>
+</html>
